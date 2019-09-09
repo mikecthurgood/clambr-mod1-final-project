@@ -129,6 +129,7 @@ def self.update_account
             choice = prompt.select("That's not a valid email addres", "Return to main menu")
             if choice == "Return to main menu"
                 Startup.home_menu
+            end
         end
     
     when "Delete my account"
@@ -141,6 +142,7 @@ def self.update_account
             choice = prompt.select("Deletion cancelled! Can we still be friends?", "Return to main menu")
             if choice == "Return to main menu"
                 Startup.home_menu
+            end
         end
     
     when "Return to home"
