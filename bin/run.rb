@@ -24,6 +24,7 @@ def area_selector
 end
 
 def wall_selector
+end
 
 
 puts " "
