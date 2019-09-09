@@ -36,7 +36,7 @@ def self.home_menu
             c = Client.find_by(email: b)
             if c
                 d = Session.create(client_id: c.id, trainer_id: rand(1..20), wall_id: j.id)
-                puts "That session's all booked for you #{c.name}. You'll be climbiung with #{d.trainer.name} at #{d.wall.name}"
+                puts "That session's all booked for you #{c.name}. You'll be climbing with #{d.trainer.name} at #{d.wall.name}"
                 sleep 1
                 Startup.home_menu
             else
@@ -52,7 +52,7 @@ def self.home_menu
                     f = gets.chomp
                     h = Client.create_user(e, f, b)
                     k = Session.create(client_id: h.id, trainer_id: rand(1..20), wall_id: j.id)
-                    puts "That session's all booked for you #{h.name}. You'll be climbiung with #{k.trainer.name} at #{k.wall.name}"
+                    puts "That session's all booked for you #{h.name}. You'll be climbing with #{k.trainer.name} at #{k.wall.name}"
                     sleep 1
                     Startup.home_menu
                 end
