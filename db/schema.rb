@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_09_112858) do
+ActiveRecord::Schema.define(version: 2019_09_09_134622) do
 
   create_table "clients", force: :cascade do |t|
     t.string "name"
@@ -24,12 +24,12 @@ ActiveRecord::Schema.define(version: 2019_09_09_112858) do
     t.integer "wall_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "trainer"
+    t.integer "trainer_id"
   end
 
   create_table "trainers", force: :cascade do |t|
     t.string "name"
-    t.string "availability"
+    t.boolean "availability"
     t.integer "grade"
   end
 
