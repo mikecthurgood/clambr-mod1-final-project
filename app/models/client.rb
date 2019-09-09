@@ -30,7 +30,13 @@ class Client < ActiveRecord::Base
         Client.create(name: name, grade: grade)
     end
 
-        
+    def update_grade(grade)
+        if grade.is_a?(integer)
+            self.grade = grade
+        else
+            puts "invalid input - please input an integer"
+        end
+    end
 
 end
     
