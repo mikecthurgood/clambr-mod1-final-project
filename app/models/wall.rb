@@ -1,6 +1,7 @@
 class Wall < ActiveRecord::Base
     has_many :sessions
     has_many :clients, through: :sessions
+    belongs_to :startup
 
     def self.find_by_location(location)
         self.find_by(location: location)
@@ -9,7 +10,7 @@ class Wall < ActiveRecord::Base
     def self.find_by_area(area)
         self.where(area: area)
     end
-
+    
 end
 
 

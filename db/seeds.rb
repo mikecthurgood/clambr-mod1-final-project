@@ -21,10 +21,11 @@
 #     Trainer.create(name: name, grade: grade)
 # end
 
-10.times do
+15.times do
     wall_id = rand(1..10)
     client_id = rand(1..100)
-    Session.create(wall_id: wall_id, client_id: client_id)
+    trainer_id = rand(1..20)
+    Session.create(wall_id: wall_id, client_id: 108, trainer_id: trainer_id)
 end
 
 
