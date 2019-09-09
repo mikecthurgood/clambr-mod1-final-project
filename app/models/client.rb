@@ -1,6 +1,8 @@
 class Client < ActiveRecord::Base
     has_many :sessions
     has_many :walls, through: :sessions
+    has_many :trainers, through: :sessions
+    belongs_to :startup
 
     def find_a_wall(name)
         Wall.find_by(name: name) 
@@ -15,15 +17,15 @@ class Client < ActiveRecord::Base
     end
 
     def which_walls?
-        self.walls.map(&:name)
+        self.walls.map(&:name).uniq
     end
 
     def which_trainers?
-        self.trainers.map(&:name)
+        self.trainers.map(&:name).uniq
     end
 
     def number_of_sessions?
-        self.all_walls_attended.length
+        self.sessions.length
     end
 
     def self.banned_user?(email)
@@ -52,6 +54,13 @@ class Client < ActiveRecord::Base
             puts "invalid input - please input an integer"
         end
     end
+
+    def self.delete_account(email)
+        client = Client.find_by(email: email)
+        client.destroy
+    end
+
+
 
 end
     
