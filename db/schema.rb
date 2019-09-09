@@ -10,13 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_09_134622) do
+ActiveRecord::Schema.define(version: 2019_09_09_143042) do
+
+  create_table "banned_users", force: :cascade do |t|
+    t.string "email"
+  end
 
   create_table "clients", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "grade"
+    t.string "email"
   end
 
   create_table "sessions", force: :cascade do |t|
