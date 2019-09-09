@@ -6,17 +6,17 @@ Wall.create(name: "White Spider Climbing", location: "Tolworth")
 Wall.create(name: "The Depot Climbing Centre", location: "Manchester")
 Wall.create(name: "The Works Climbing Centre", location: "Sheffield")
 Wall.create(name: "Hackney Wick Boulder Project", location: "Hackney Wick")
-Wall.create(name: "Colchester Climbing Project", locaction: "Colchester")
+Wall.create(name: "Colchester Climbing Project", location: "Colchester")
 Wall.create(name: "The Arch Climbing Wall", location: "Bermondsey")
 
 100.times do
-    name = faker::name.unique.name
+    name = Faker::Name.unique.name
     grade = rand(1..10)
     Client.create(name: name, grade: grade )
 end
 
 20.times do
-    name = faker::name.unique.name
+    name = Faker::Name.unique.name
     grade = rand(8..15)
     Trainer.create(name: name, grade: grade)
 end
