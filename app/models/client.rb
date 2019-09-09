@@ -26,8 +26,18 @@ class Client < ActiveRecord::Base
         self.all_walls_attended.length
     end
 
-    def self.create_user(name, grade)
-        Client.create(name: name, grade: grade)
+    def self.banned_user?(email)
+        BannedUser.all.find_by(email: email)
+    end
+
+    def self.create_user(name, grade, email)
+        if Client.banned_user?(email)
+            puts "#{email} is blacklisted, jog on."
+        elsif email == nil
+            puts "Please input an email address"
+        else
+        Client.create(name: name, grade: grade, email: email)
+        end
     end
 
     def update_grade(grade)
