@@ -10,5 +10,5 @@ ActiveRecord::Base.logger = nil
 
 # ActiveRecord::Base.logger = nil
 
-require_all 'app'
+require_all 'app/models'
 
