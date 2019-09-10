@@ -93,6 +93,7 @@ class Startup
                 Startup.return_to_main
             else
                 puts " "
+                prompt = TTY::Prompt.new
                 choice = prompt.select("That's not a valid email addres", "Return to update my account menu")
                 if choice == "Return to main menu"
                     Startup.update_account
@@ -168,6 +169,7 @@ class Startup
             Startup.logged_in_menu
         else
             puts "Hmm, I can't seem to find the email address"
+            prompt = TTY::Prompt.new
             choice = prompt.select("Try again or create new account?", "Try again", "Create new account")
         case choice
             when "Create new account"
@@ -202,6 +204,7 @@ class Startup
             else
                 "Email invalid, please try again"
                 sleep 1
+                prompt = TTY::Prompt.new
                 choice = prompt.select("", "Try again", "Logout")
                     if choice == "Try again"
                         Startup.create_new_account
