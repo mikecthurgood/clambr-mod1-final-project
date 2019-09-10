@@ -11,6 +11,11 @@ class Trainer < ActiveRecord::Base
         self.availability = false
     end
 
+    def available?
+        self.availability
+    end
+    
+
     def session_count
         self.sessions.all.length
     end

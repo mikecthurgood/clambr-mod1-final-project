@@ -176,7 +176,7 @@ class Startup
                 Startup.create_new_account
                 Startup.logged_in_menu
             when "Try again"
-                Startup.account_finder
+                Startup.user_login
             end
         end
     end
@@ -236,11 +236,12 @@ class Startup
 
     def self.book_session
         a = Startup.area_selector
+        b = Startup.date_selector
         j = Wall.find_by(name: a)
         c = Client.find_by(email: @@user.email)
         if c
-            d = Session.create(client_id: c.id, trainer_id: rand(1..20), wall_id: j.id)
-            puts "That session's all booked for you #{c.name}. You'll be climbing with #{d.trainer.name} at #{d.wall.name}"
+            d = Session.create(client_id: c.id, trainer_id: rand(1..20), wall_id: j.id, slot: b)
+            puts "That session's all booked for you #{c.name}. You'll be climbing on #{b[:day]} #{b[:time]} with #{d.trainer.name} at #{d.wall.name}. See you there! 🧗‍♀️ 🧗‍♂️ 💪"
             sleep 1
             Startup.return_to_main
         end
@@ -252,4 +253,55 @@ class Startup
         @@user.update(grade: choice)
     end
 
+    def self.date_selector
+        prompt = TTY::Prompt.new
+        choice1 = prompt.select("What day would you like to choose?", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+        choice2 = prompt.select("Morning or afternoon?", "Morning", "Afternoon")
+        slot = {day: choice1, time: choice2, key: nil}
+        case choice1
+        when "Monday"
+            if choice2 == "Morning"
+                slot[:key] = 1
+            else
+                slot[:key] = 2
+            end
+        when "Tuesday"
+            if choice2 == "Morning"
+                slot[:key] = 3
+            else
+                slot[:key] = 4
+            end
+        when "Wednesday"
+            if choice2 == "Morning"
+                slot[:key] = 5
+            else
+                slot[:key] = 6
+            end
+        when "Thursday"
+            if choice2 == "Morning"
+                slot[:key] = 7
+            else
+                slot[:key] = 8
+            end
+        when "Friday"
+            if choice2 == "Morning"
+                slot[:key] = 9
+            else
+                slot[:key] = 10
+            end
+        when "Saturday"
+            if choice2 == "Morning"
+                slot[:key] = 11
+            else
+                slot[:key] = 12
+            end
+        when "Sunday"
+            if choice2 == "Morning"
+                slot[:key] = 13
+            else
+                slot[:key] = 14
+            end
+        end
+        slot
+    end
 end
