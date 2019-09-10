@@ -1,14 +1,26 @@
 require_relative '../../config/environment.rb'
 class Startup
 
-    @quote = ["Training is like fighting a bear. You don't stop when you're tired, you stop when the bear's tired!", "There are no shortcuts to any place worth going.", "You cannot teach a man anything. You can only help him discover it within himself.", "A man can seldom -- very, very, seldom -- fight a winning fight against his training; the odds are too heavy.", ]
+    @quote = ["Training is like fighting a bear. You don't stop when you're tired, you stop when the bear's tired!", "There are no shortcuts to any place worth going.", "You cannot teach a man anything. You can only help him discover it within himself.", "I don’t count my situps. I only start counting once it starts hurting. -Muhammad Ali", "I’ve failed over and over again in my life. And that is why I succeed.” – Michael Jordan", "There may be people that have more talent than you, but there’s no excuse for anyone to work harder than you do. – Derek Jeter", "To uncover your true potential you must first find your own limits and then you have to have the courage to blow past them.", "You miss 100 percent of the shots you don’t take.", "Never say never because limits, like fears, are often just an illusion."]
 
     @@user = nil
 
     def self.home_menu
         @@user = nil
     prompt = TTY::Prompt.new
-        puts "LOGIN MENU"
+    puts "\e[H\e[2J"
+    puts "▄█        ▄██████▄     ▄██████▄   ▄█  ███▄▄▄▄   "
+    puts "███       ███    ███   ███    ███ ███  ███▀▀▀██▄ "
+    puts "███       ███    ███   ███    █▀  ███▌ ███   ███ "
+    puts "███       ███    ███  ▄███        ███▌ ███   ███ "
+    puts "███       ███    ███ ▀▀███ ████▄  ███▌ ███   ███ "
+    puts "███       ███    ███   ███    ███ ███  ███   ███ "
+    puts "███▌    ▄ ███    ███   ███    ███ ███  ███   ███ "
+    puts "█████▄▄██  ▀██████▀    ████████▀  █▀    ▀█   █▀   "
+
+
+
+        puts " "
         choice = prompt.select("What would you like to do?", "Create new account", "Login")
         case choice
             when "Create new account"
@@ -21,8 +33,26 @@ class Startup
 
     def self.logged_in_menu
         puts "\e[H\e[2J"
+        
+        puts "▄████████  ▄█          ▄████████   ▄▄▄▄███▄▄▄▄   ▀█████████▄     ▄████████ "
+        sleep 0.05
+        puts "███    ███ ███         ███    ███ ▄██▀▀▀███▀▀▀██▄   ███    ███   ███    ███ "
+        sleep 0.05
+        puts "███    █▀  ███         ███    ███ ███   ███   ███   ███    ███   ███    ███ "
+        sleep 0.05
+        puts "███        ███         ███    ███ ███   ███   ███  ▄███▄▄▄██▀   ▄███▄▄▄▄██▀ "
+        sleep 0.05
+        puts "███        ███       ▀███████████ ███   ███   ███ ▀▀███▀▀▀██▄  ▀▀███▀▀▀▀▀   "
+        sleep 0.05
+        puts "███    █▄  ███         ███    ███ ███   ███   ███   ███    ██▄ ▀███████████ "
+        sleep 0.05
+        puts "███    ███ ███▌    ▄   ███    ███ ███   ███   ███   ███    ███   ███    ███ "
+        sleep 0.05
+        puts "████████▀  █████▄▄██   ███    █▀   ▀█   ███   █▀  ▄█████████▀    ███    ███ "
+        sleep 0.05
+        puts "           ▀                                                     ███    ███ "
         puts " "
-        puts " "
+        puts '         🏁   '
         puts '        ^\_ '
         puts '    o_/^   \ '
         puts '    /_^     `_ '
@@ -30,11 +60,9 @@ class Startup
         puts '    / ^         \ '
         puts '    ^             ` '
         puts " "
-            if @@user
-                puts "Hi #{@@user.name}! Welcome to Clambr."
-            else    
+        puts "Hi #{@@user.name}!" 
+        puts " "
         puts "Welcome to Clambr."
-            end
         puts "The climbing trainer."
         puts " "
         puts "Thought for the day:"
@@ -69,7 +97,6 @@ class Startup
                 puts "No problem, from now on you shall be known as #{@@user.name}!"
                 puts " "
                 Startup.return_to_main
-                
 
         when "Grade"
             puts "Hi #{@@user.name}, please select your new grade (<- ->)"
@@ -192,7 +219,8 @@ class Startup
         puts "What's your name?"
             a = gets.chomp
             puts "What grade do you climb at? (1 - 10)?"
-            b = gets.chomp
+            prompt = TTY::Prompt.new
+            b = prompt.slider("select your grade",{min: 0, max: 10, step: 1})
             puts "what's your email address?"
             c = gets.chomp
             if Client.valid_email?(c)
@@ -202,7 +230,7 @@ class Startup
                 puts " "
                 sleep 1
             else
-                "Email invalid, please try again"
+                puts "Email invalid, please try again"
                 sleep 1
                 prompt = TTY::Prompt.new
                 choice = prompt.select("", "Try again", "Logout")
