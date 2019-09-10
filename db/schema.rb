@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_09_161037) do
+ActiveRecord::Schema.define(version: 2019_09_10_120914) do
 
   create_table "banned_users", force: :cascade do |t|
     t.string "email"
@@ -30,6 +30,24 @@ ActiveRecord::Schema.define(version: 2019_09_09_161037) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "trainer_id"
+    t.integer "slot"
+  end
+
+  create_table "slots", force: :cascade do |t|
+    t.string "Monday_AM"
+    t.string "Monday_PM"
+    t.string "Tuesday_AM"
+    t.string "Tuesday_PM"
+    t.string "Wednesday_AM"
+    t.string "Wednesday_PM"
+    t.string "Thursday_AM"
+    t.string "Thursday_PM"
+    t.string "Friday_AM"
+    t.string "Friday_PM"
+    t.string "Saturday_AM"
+    t.string "Saturday_PM"
+    t.string "Sunday_AM"
+    t.string "Sunday_PM"
   end
 
   create_table "trainers", force: :cascade do |t|
