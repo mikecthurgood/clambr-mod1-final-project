@@ -149,7 +149,7 @@ class Startup
     
 
         
-        when "Delete my account"
+        when "Delete my account".colorize(:red)
             puts "Are you sure you want to delete your account #{@@user.name}? If so please type DELETE to confirm.".colorize(:red)
             d = gets.chomp
             if d == "DELETE"
