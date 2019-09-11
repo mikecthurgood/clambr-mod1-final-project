@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_11_123320) do
+ActiveRecord::Schema.define(version: 2019_09_11_130713) do
 
   create_table "banned_users", force: :cascade do |t|
     t.string "email"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 2019_09_11_123320) do
     t.integer "grade"
     t.string "email"
     t.string "password"
+    t.boolean "superuser"
   end
 
   create_table "sessions", force: :cascade do |t|

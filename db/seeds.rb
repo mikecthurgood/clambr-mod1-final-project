@@ -21,12 +21,15 @@
 #     Trainer.create(name: name, grade: grade)
 # end
 
-15.times do
-    wall_id = rand(1..10)
-    client_id = rand(1..100)
-    trainer_id = rand(1..20)
-    Session.create(wall_id: wall_id, client_id: 108, trainer_id: trainer_id)
-end
+# 15.times do
+#     wall_id = rand(1..10)
+#     client_id = rand(1..100)
+#     trainer_id = rand(1..20)
+#     Session.create(wall_id: wall_id, client_id: 108, trainer_id: trainer_id)
+# end
+
+Client.create(name: "Super Chrissy", grade: 10, email: "chrisk@super.user", password: "@super", superuser: true )
+Client.create(name: "Super Mikey", grade: 10, email: "miket@super.user", password: "@super", superuser: true )
 
 
 
