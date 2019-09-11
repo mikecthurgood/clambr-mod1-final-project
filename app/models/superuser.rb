@@ -3,7 +3,6 @@ class SuperUser < Startup
 
 #     # @superuserquote = ["With great power, comes great responsibility. Do not abuse your power, oh mighty #{@@user.name}"]
 
-    @@superuser = Startup.user
     @@prompt = TTY::Prompt.new
 
 
@@ -50,7 +49,7 @@ class SuperUser < Startup
         puts " "
         puts "Welcome to the Clambr admin dashboard".colorize(:cyan)
         puts "Here, you are god!".colorize(:cyan)
-        puts "Remember, with great power, comes great responsibility. Do not abuse your power, oh mighty #{@@superuser.name}"
+        puts "Remember, with great power, comes great responsibility. Do not abuse your power, oh mighty superuser"
         puts " "
         puts " "
         puts "HOME MENU".colorize(:cyan)
