@@ -71,70 +71,91 @@ class SuperUser
         puts "Please enter the email address of user you would like to update"
         user = gets.chomp
         @user = Client.find_by(email: user)
-        puts "You are updating records for #{@user.name}"
-        choice = @@prompt.select("What would you like to change?".colorize(:cyan), "Name", "Grade", "Email", "Delete account", "Ban user".colorize(:red), "Return to home")
-        case choice
-        
-        when "Name"
-                puts "Please enter the new username for #{@user.name}.".colorize(:cyan)
-                a = gets.chomp
-                @user.update(name: a)
-                puts " "
-                puts "No problem, from now on they shall be known as".colorize(:cyan) + " #{@user.name}!".colorize(:green)
-                puts " "
-                SuperUser.return_to_main
-
-        when "Grade"
-            puts "Ok SuperUser, time to abuse your power. Select the #{@user}'s new grade (<- ->)".colorize(:cyan)
-            SuperUser.grade_slider
-                puts "User grade now set to V#{@user.grade}.".colorize(:green)
-                sleep 2
-            SuperUser.return_to_main
-        
-        when "Email"
-            puts "Please enter the new email address for #{@user.name}".colorize(:cyan)
-            c = gets.chomp
-            valid_email = Client.valid_email?(c)
-            if valid_email
-                @user.update(email: c)
-                puts " "
-                puts "Email address changed to #{@user.email} for #{@user.name}.".colorize(:cyan)
-                puts " "
-                sleep 5
-                SuperUser.return_to_main
+        if !@user
+                puts "email not found, please try again"
+                sleep 1
+                SuperUser.update_account
             else
-                puts " "
-                choice = @@prompt.select("That's not a valid email address, please try again", "Start again")
-                if choice == "Start again"
-                    SuperUser.update_account
-                end
-            end
-        
-        when "Delete account"
-            puts "Are you sure you want to delete #{@user.name}'s account? Type DELETE to confirm.".colorize(:red)
-            d = gets.chomp
-            if d == "DELETE"
-                Client.delete_account(@user.email)
-                puts "Account Deleted!!"
-                sleep 3
-                Startup.home_menu
-            else
-                choice = @@prompt.select("Deletion cancelled! {@user.name} dodged a bullet there!".colorize(:red), "Return to main menu")
-                if choice == "Return to main menu"
-                    SuperUser.logged_in_menu
-                end
-            end
+            puts "You are updating records for #{@user.name}"
+            choice = @@prompt.select("What would you like to change?".colorize(:cyan), "Name", "Grade", "Email", "Delete account", "Ban user".colorize(:red), "Return to home")
+            case choice
             
-        when "Ban user"
-            puts "Please enter the email of the user you want to ban."
-            puts "Banning a user will blacklist their email address."
-            puts "This CANNOT be undone!".colorize(:red)
-            email = gets.chomp
-            Trainer.ban_client(email)
-            puts "The user has been banished. Never to tread on Clambr soil again!"
-        
-        when "Return to home"
-            SuperUser.logged_in_menu
+            when "Name"
+                    puts "Please enter the new username for #{@user.name}.".colorize(:cyan)
+                    a = gets.chomp
+                    @user.update(name: a)
+                    puts " "
+                    puts "No problem, from now on they shall be known as".colorize(:cyan) + " #{@user.name}!".colorize(:green)
+                    puts " "
+                    SuperUser.return_to_main
+
+            when "Grade"
+                puts "Ok SuperUser, time to abuse your power. Select the #{@user}'s new grade (<- ->)".colorize(:cyan)
+                SuperUser.grade_slider
+                    puts "User grade now set to V#{@user.grade}.".colorize(:green)
+                    sleep 1
+                SuperUser.return_to_main
+            
+            when "Email"
+                puts "Please enter the new email address for #{@user.name}".colorize(:cyan)
+                c = gets.chomp
+                valid_email = Client.valid_email?(c)
+                if valid_email
+                    @user.update(email: c)
+                    puts " "
+                    puts "Email address changed to #{@user.email} for #{@user.name}.".colorize(:cyan)
+                    puts " "
+                    sleep 1
+                    SuperUser.return_to_main
+                else
+                    puts " "
+                    choice = @@prompt.select("That's not a valid email address, please try again", "Start again")
+                    if choice == "Start again"
+                        SuperUser.update_account
+                    end
+                end
+            
+            when "Delete account"
+                puts "Are you sure you want to delete #{@user.name}'s account? Type DELETE to confirm.".colorize(:red)
+                d = gets.chomp
+                if d == "DELETE"
+                    Client.delete_account(@user.email)
+                    puts "Account Deleted!!"
+                    sleep 1
+                    Startup.home_menu
+                else
+                    choice = @@prompt.select("Deletion cancelled! {@user.name} dodged a bullet there!".colorize(:red), "Return to main menu")
+                    if choice == "Return to main menu"
+                        SuperUser.logged_in_menu
+                    end
+                end
+                
+            when "Ban user".colorize(:red)
+                puts "Please confirm the email of the user you want to ban."
+                email = gets.chomp
+                if email != @user.email
+                    puts "That email didn't match, please restart the process"
+                    SuperUser.return_to_main
+                else
+                    puts "Banning a user will blacklist their email address."
+                    puts "This CANNOT be undone!".colorize(:red)
+                    puts "please type CONFIRM to confirm banishment"
+                    input = gets.chomp
+                    if input == "CONFIRM"
+                        Trainer.ban_client(@user.email)
+                        puts "The user has been banished. Never to tread on Clambr soil again!"
+                        sleep 1
+                        SuperUser.return_to_main
+                    else
+                        puts "Banishment cancelled - you are a mercifuil overlord"
+                        sleep 1
+                        SuperUser.return_to_main
+                    end
+                end
+            
+            when "Return to home"
+                SuperUser.logged_in_menu
+            end
         end
     end
 
@@ -180,6 +201,8 @@ class SuperUser
         puts "Total walls: #{Wall.all.length}"
         puts "Total trainers: #{Trainer.all.length}"
         puts "Total number of banned users: #{BannedUser.all.length}"
+        sleep 2
+        SuperUser.return_to_main
     end
 
     def self.return_to_main

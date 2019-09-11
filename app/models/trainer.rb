@@ -24,9 +24,6 @@ class Trainer < ActiveRecord::Base
         user = Client.find_by(email: email)
         user.destroy
         BannedUser.create(email: email)
-        # finish this method by putting flow control into the Client class to check the banlist for the email a new user tries to input
-        # and return a message saying "Sorry that email is blacklisted"
-        puts "#{name} has been removed from the database and added to the blacklist. Unlucky."
     end
 end
 
