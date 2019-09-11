@@ -5,52 +5,66 @@ class Startup
 
     @@user = nil
 
+    def self.putsyellow(text)
+        puts text.colorize(:yellow)
+    end
+
+    def self.putsgreen(text)
+        puts text.colorize(:green)
+    end
+    
+
     def self.home_menu
         @@user = nil
     prompt = TTY::Prompt.new
     puts "\e[H\e[2J"
-    puts "▄█        ▄██████▄     ▄██████▄   ▄█  ███▄▄▄▄   "
-    puts "███       ███    ███   ███    ███ ███  ███▀▀▀██▄ "
-    puts "███       ███    ███   ███    █▀  ███▌ ███   ███ "
-    puts "███       ███    ███  ▄███        ███▌ ███   ███ "
-    puts "███       ███    ███ ▀▀███ ████▄  ███▌ ███   ███ "
-    puts "███       ███    ███   ███    ███ ███  ███   ███ "
-    puts "███▌    ▄ ███    ███   ███    ███ ███  ███   ███ "
-    puts "█████▄▄██  ▀██████▀    ████████▀  █▀    ▀█   █▀   "
+    puts "*************************************************".colorize(:cyan)
+    putsyellow( "▄█        ▄██████▄     ▄██████▄   ▄█   ███▄▄▄▄    ")
+    putsyellow( "███       ███    ███   ███    ███ ███  ███▀▀▀██▄ ")
+    putsyellow( "███       ███    ███   ███    █▀  ███▌ ███   ███ ")
+    putsyellow( "███       ███    ███  ▄███        ███▌ ███   ███ ")
+    putsyellow( "███       ███    ███ ▀▀███ ████▄  ███▌ ███   ███ ")
+    putsyellow( "███       ███    ███   ███    ███ ███  ███   ███ ")
+    putsyellow( "███▌    ▄ ███    ███   ███    ███ ███  ███   ███ ")
+    putsyellow( "█████▄▄██  ▀██████▀    ████████▀  █▀    ▀█   █▀  ")
+    puts "*************************************************".colorize(:cyan)
 
 
 
         puts " "
-        choice = prompt.select("What would you like to do?", "Create new account", "Login")
+        choice = prompt.select("What would you like to do?".colorize(:cyan), "Create new account", "Login")
         case choice
             when "Create new account"
                 Startup.create_new_account
                 Startup.continue_to_main
             when "Login"
                 Startup.user_login
-            end
         end
+    end
+
 
     def self.logged_in_menu
         puts "\e[H\e[2J"
+        puts "***************************************************************************".colorize(:cyan)
+        self.putsyellow( "▄████████  ▄█          ▄████████   ▄▄▄▄███▄▄▄▄   ▀█████████▄     ▄████████ ")
+        sleep 0.05
+        self.putsyellow( "███    ███ ███         ███    ███ ▄██▀▀▀███▀▀▀██▄   ███    ███   ███    ███ ")
+        sleep 0.05
+        self.putsyellow( "███    █▀  ███         ███    ███ ███   ███   ███   ███    ███   ███    ███ ")
+        sleep 0.05
+        self.putsyellow( "███        ███         ███    ███ ███   ███   ███  ▄███▄▄▄██▀   ▄███▄▄▄▄██▀ ")
+        sleep 0.05
+        self.putsyellow( "███        ███       ▀███████████ ███   ███   ███ ▀▀███▀▀▀██▄  ▀▀███▀▀▀▀▀   ")
+        sleep 0.05
+        self.putsyellow( "███    █▄  ███         ███    ███ ███   ███   ███   ███    ██▄ ▀███████████ ")
+        sleep 0.05
+        self.putsyellow( "███    ███ ███▌    ▄   ███    ███ ███   ███   ███   ███    ███   ███    ███ ")
+        sleep 0.05
+        self.putsyellow( "████████▀  █████▄▄██   ███    █▀   ▀█   ███   █▀  ▄█████████▀    ███    ███ ")
+        sleep 0.05
+        self.putsyellow( "           ▀                                                     ███    ███ ")
+        puts "***************************************************************************".colorize(:cyan)
         
-        puts "▄████████  ▄█          ▄████████   ▄▄▄▄███▄▄▄▄   ▀█████████▄     ▄████████ "
-        sleep 0.05
-        puts "███    ███ ███         ███    ███ ▄██▀▀▀███▀▀▀██▄   ███    ███   ███    ███ "
-        sleep 0.05
-        puts "███    █▀  ███         ███    ███ ███   ███   ███   ███    ███   ███    ███ "
-        sleep 0.05
-        puts "███        ███         ███    ███ ███   ███   ███  ▄███▄▄▄██▀   ▄███▄▄▄▄██▀ "
-        sleep 0.05
-        puts "███        ███       ▀███████████ ███   ███   ███ ▀▀███▀▀▀██▄  ▀▀███▀▀▀▀▀   "
-        sleep 0.05
-        puts "███    █▄  ███         ███    ███ ███   ███   ███   ███    ██▄ ▀███████████ "
-        sleep 0.05
-        puts "███    ███ ███▌    ▄   ███    ███ ███   ███   ███   ███    ███   ███    ███ "
-        sleep 0.05
-        puts "████████▀  █████▄▄██   ███    █▀   ▀█   ███   █▀  ▄█████████▀    ███    ███ "
-        sleep 0.05
-        puts "           ▀                                                     ███    ███ "
         puts " "
         puts '         🏁   '
         puts '        ^\_ '
@@ -60,17 +74,17 @@ class Startup
         puts '    / ^         \ '
         puts '    ^             ` '
         puts " "
-        puts "Hi #{@@user.name}!" 
+        puts "Hi #{@@user.name}!".colorize(:cyan) 
         puts " "
-        puts "Welcome to Clambr."
-        puts "The climbing trainer."
+        puts "Welcome to Clambr.".colorize(:cyan)
+        puts "The climbing trainer.".colorize(:cyan)
         puts " "
         puts "Thought for the day:"
         puts @quote.sample
         puts " "
         prompt = TTY::Prompt.new
-        puts "HOME MENU"
-        choice = prompt.select("What would you like to do?", "Update or delete my account", "Book a session", "See my stats", "Logout")
+        puts "HOME MENU".colorize(:cyan)
+        choice = prompt.select("What would you like to do?".colorize(:cyan), "Update or delete my account", "Book a session", "See my stats", "Logout")
         case choice
             when "Update or delete my account"
                 Startup.update_account
@@ -85,50 +99,54 @@ class Startup
 
     def self.update_account
         prompt = TTY::Prompt.new
-        puts "UPDATE ACCOUNT"
-        choice = prompt.select("What would you like to change?", "Name", "Grade", "Email", "Delete my account", "Return to home")
+        puts "UPDATE ACCOUNT".colorize(:cyan)
+        choice = prompt.select("What would you like to change?".colorize(:cyan), "Name", "Grade", "Email", "Delete my account".colorize(:red), "Return to home")
         case choice
         
         when "Name"
-                puts "Hi #{@@user.name}, please enter your new username."
+                puts "Hi".colorize(:cyan) + " #{@@user.name},".colorize(:green) + " please enter your new username.".colorize(:cyan)
                 a = gets.chomp
                 @@user.update(name: a)
                 puts " "
-                puts "No problem, from now on you shall be known as #{@@user.name}!"
+                puts "No problem, from now on you shall be known as".colorize(:cyan) + " #{@@user.name}!".colorize(:green)
                 puts " "
                 Startup.return_to_main
 
         when "Grade"
-            puts "Hi #{@@user.name}, please select your new grade (<- ->)"
+            puts "Hi #{@@user.name}, please select your new grade (<- ->)".colorize(:cyan)
             Startup.grade_slider
-            puts " "
-            puts "Climbing at V#{@@user.grade}! You're crushing it!"
-            puts " "
-            sleep 2
+            if @@user.grade > 5    
+                puts " "
+                puts "Climbing at V#{@@user.grade}! You're" + " crushing it!".colorize(:green)
+            else
+                puts " "
+                puts "Climbing at V#{@@user.grade}!" + " Keep pushing!".colorize(:red)
+                sleep 2
+            end
             Startup.return_to_main
         
         when "Email"
-            puts "Hi #{@@user.name}, please enter your new email address"
+            puts "Hi #{@@user.name}, please enter your new email address".colorize(:cyan)
             c = gets.chomp
             valid_email = Client.valid_email?(c)
             if valid_email
                 @@user.update(email: c)
                 puts " "
-                puts "Great! We'll use #{@@user.email} for your login email! "
+                puts "Great! We'll use #{@@user.email} for your login email!".colorize(:cyan)
                 puts " "
-                sleep 2
+                sleep 5
                 Startup.return_to_main
             else
                 puts " "
                 prompt = TTY::Prompt.new
-                choice = prompt.select("That's not a valid email addres", "Return to update my account menu")
+                choice = prompt.select("That's not a valid email address", "Return to update my account menu")
                 if choice == "Return to main menu"
                     Startup.update_account
                 end
             end
         
         when "Delete my account"
-            puts "Are you sure you want to delete your account #{@@user.name}? If so please type DELETE to confirm."
+            puts "Are you sure you want to delete your account #{@@user.name}? If so please type DELETE to confirm.".colorize(:red)
             d = gets.chomp
             if d == "DELETE"
                 Client.delete_account(@@user.email)
@@ -136,7 +154,7 @@ class Startup
                 sleep 3
                 Startup.home_menu
             else
-                choice = prompt.select("Deletion cancelled! Can we still be friends?", "Return to main menu")
+                choice = prompt.select("Deletion cancelled! Can we still be friends??".colorize(:red), "Return to main menu")
                 if choice == "Return to main menu"
                     Startup.logged_in_menu
                 end
@@ -148,9 +166,9 @@ class Startup
     end
 
     def self.area_selector
-        puts"Ok!"
+        puts"Ok!".colorize(:cyan)
         prompt = TTY::Prompt.new
-        choice = prompt.select("Which area of London are you in", "North London", "East London", "South London", "West London")
+        choice = prompt.select("Which area of London are you in".colorize(:cyan), "North London", "East London", "South London", "West London")
         self.wall_selector(choice)
     end
 
@@ -158,16 +176,16 @@ class Startup
         case location
         when "North London"
             prompt = TTY::Prompt.new
-            @choice = prompt.select("Which wall would you like to book a session at?", Wall.where(area: "North London").map(&:name))
+            @choice = prompt.select("Which wall would you like to book a session at?".colorize(:cyan), Wall.where(area: "North London").map(&:name))
         when "East London"
             prompt = TTY::Prompt.new
-            @choice = prompt.select("Which wall would you like to book a session at?", Wall.where(area: "East London").map(&:name))
+            @choice = prompt.select("Which wall would you like to book a session at?".colorize(:cyan), Wall.where(area: "East London").map(&:name))
         when "South London"
             prompt = TTY::Prompt.new
-            @choice = prompt.select("Which wall would you like to book a session at?", Wall.where(area: "South London").map(&:name))
+            @choice = prompt.select("Which wall would you like to book a session at?".colorize(:cyan), Wall.where(area: "South London").map(&:name))
         when "West London"
             prompt = TTY::Prompt.new
-            @choice = prompt.select("Which wall would you like to book a session at?", Wall.where(area: "West London").map(&:name))
+            @choice = prompt.select("Which wall would you like to book a session at?".colorize(:cyan), Wall.where(area: "West London").map(&:name))
         end
     end
 
@@ -176,7 +194,7 @@ class Startup
         w = @@user.which_walls?
         t = @@user.which_trainers?
         gra = @@user.grade
-        puts "Hi #{@@user.name}. Here's your current Clambr stats:"
+        puts "Hi #{@@user.name}. Here's your current Clambr stats:".colorize(:cyan)
         if num_sesh == 1
             puts "- You have had #{num_sesh} session!"
         else
@@ -195,9 +213,9 @@ class Startup
         if @@user
             Startup.logged_in_menu
         else
-            puts "Hmm, I can't seem to find the email address"
+            puts "Hmm, I can't seem to find the email address".colorize(:red)
             prompt = TTY::Prompt.new
-            choice = prompt.select("Try again or create new account?", "Try again", "Create new account")
+            choice = prompt.select("Try again or create new account?".colorize(:cyan), "Try again", "Create new account")
         case choice
             when "Create new account"
                 Startup.create_new_account
@@ -209,19 +227,19 @@ class Startup
     end
 
     def self.account_finder
-        puts "Please input the email address associated with your account."
+        puts "Please input the email address associated with your account.".colorize(:cyan)
         email = gets.chomp
         a = Client.find_by(email: email)
         a
     end
 
     def self.create_new_account
-        puts "What's your name?"
+        puts "What's your name?".colorize(:cyan)
             a = gets.chomp
-            puts "What grade do you climb at? (1 - 10)?"
+            puts "What grade do you climb at? (1 - 10)?".colorize(:cyan)
             prompt = TTY::Prompt.new
-            b = prompt.slider("select your grade",{min: 0, max: 10, step: 1})
-            puts "what's your email address?"
+            b = prompt.slider("Select your grade",{min: 0, max: 10, step: 1})
+            puts "what's your email address?".colorize(:cyan)
             c = gets.chomp
             if Client.valid_email?(c)
                 @@user = Client.create_user(a, b, c)
@@ -230,7 +248,7 @@ class Startup
                 puts " "
                 sleep 1
             else
-                puts "Email invalid, please try again"
+                puts "Email invalid, please try again".colorize(:red)
                 sleep 1
                 prompt = TTY::Prompt.new
                 choice = prompt.select("", "Try again", "Logout")
@@ -269,7 +287,7 @@ class Startup
         c = Client.find_by(email: @@user.email)
         if c
             d = Session.create(client_id: c.id, trainer_id: rand(1..20), wall_id: j.id, slot: b)
-            puts "That session's all booked for you #{c.name}. You'll be climbing on #{b[:day]} #{b[:time]} with #{d.trainer.name} at #{d.wall.name}. See you there! 🧗‍♀️ 🧗‍♂️ 💪"
+            puts "That session's all booked for you #{c.name}. You'll be climbing on" + " #{b[:day]} #{b[:time]}".colorize(:cyan) + " with" + " #{d.trainer.name}".colorize(:yellow) +  " at" + " #{d.wall.name}.".colorize(:green) + " See you there! 🧗‍♀️ 🧗‍♂️ 💪"
             sleep 1
             Startup.return_to_main
         end
@@ -277,14 +295,14 @@ class Startup
 
     def self.grade_slider
         prompt = TTY::Prompt.new
-        choice = prompt.slider("select your grade",{min: 0, max: 10, step: 1})
+        choice = prompt.slider("".colorize(:cyan),{min: 0, max: 10, step: 1})
         @@user.update(grade: choice)
     end
 
     def self.date_selector
         prompt = TTY::Prompt.new
-        choice1 = prompt.select("What day would you like to choose?", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
-        choice2 = prompt.select("Morning or afternoon?", "Morning", "Afternoon")
+        choice1 = prompt.select("What day would you like to choose?".colorize(:cyan), "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+        choice2 = prompt.select("Morning or afternoon?".colorize(:cyan), "Morning", "Afternoon")
         slot = {day: choice1, time: choice2, key: nil}
         case choice1
         when "Monday"

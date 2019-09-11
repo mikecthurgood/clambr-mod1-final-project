@@ -1,5 +1,8 @@
 require 'bundler/setup'
+require 'colorize'
 Bundler.require
+
+
 
 ActiveRecord::Base.establish_connection(
   adapter: 'sqlite3',
