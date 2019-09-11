@@ -1,7 +1,7 @@
 require_relative '../../config/environment.rb'
-class SuperUser < Startup
+class SuperUser
 
-#     # @superuserquote = ["With great power, comes great responsibility. Do not abuse your power, oh mighty #{@@user.name}"]
+#     # @SuperUserquote = ["With great power, comes great responsibility. Do not abuse your power, oh mighty #{@@user.name}"]
 
     @@prompt = TTY::Prompt.new
 
@@ -49,18 +49,18 @@ class SuperUser < Startup
         puts " "
         puts "Welcome to the Clambr admin dashboard".colorize(:cyan)
         puts "Here, you are god!".colorize(:cyan)
-        puts "Remember, with great power, comes great responsibility. Do not abuse your power, oh mighty superuser"
+        puts "Remember, with great power, comes great responsibility. Do not abuse your power, oh mighty SuperUser"
         puts " "
         puts " "
         puts "HOME MENU".colorize(:cyan)
-        choice = @@prompt.select("What would you like to do?".colorize(:cyan), "Update, ban or delete users", "View all users and sessions", "See usage stats", "Logout")
+        choice = @@prompt.select("What would you like to do?".colorize(:cyan), "Update, ban or delete users", "View all users, trainers & walls", "See usage stats", "Logout")
         case choice
             when "Update, ban or delete users"
-                Superuser.update_account
+                SuperUser.update_account
             when "View all users, trainers & walls"
-                Superuser.users_and_sessions_menu    
+                SuperUser.users_and_sessions_menu    
             when "See usage stats"
-                Superuser.stats_menu
+                SuperUser.global_stats
             when "Logout"
                 Startup.home_menu
         end
@@ -69,7 +69,9 @@ class SuperUser < Startup
     def self.update_account
         puts "UPDATE ACCOUNT".colorize(:cyan)
         puts "Please enter the email address of user you would like to update"
-        @user = gets.chomp
+        user = gets.chomp
+        @user = Client.find_by(email: user)
+        puts "You are updating records for #{@user.name}"
         choice = @@prompt.select("What would you like to change?".colorize(:cyan), "Name", "Grade", "Email", "Delete account", "Ban user".colorize(:red), "Return to home")
         case choice
         
@@ -80,14 +82,14 @@ class SuperUser < Startup
                 puts " "
                 puts "No problem, from now on they shall be known as".colorize(:cyan) + " #{@user.name}!".colorize(:green)
                 puts " "
-                Superuser.return_to_main
+                SuperUser.return_to_main
 
         when "Grade"
-            puts "Ok superuser, time to abuse your power. Select the #{@user}'s new grade (<- ->)".colorize(:cyan)
-            Superuser.grade_slider
+            puts "Ok SuperUser, time to abuse your power. Select the #{@user}'s new grade (<- ->)".colorize(:cyan)
+            SuperUser.grade_slider
                 puts "User grade now set to V#{@user.grade}.".colorize(:green)
                 sleep 2
-            Superuser.return_to_main
+            SuperUser.return_to_main
         
         when "Email"
             puts "Please enter the new email address for #{@user.name}".colorize(:cyan)
@@ -99,12 +101,12 @@ class SuperUser < Startup
                 puts "Email address changed to #{@user.email} for #{@user.name}.".colorize(:cyan)
                 puts " "
                 sleep 5
-                Superuser.return_to_main
+                SuperUser.return_to_main
             else
                 puts " "
                 choice = @@prompt.select("That's not a valid email address, please try again", "Start again")
                 if choice == "Start again"
-                    Superuser.update_account
+                    SuperUser.update_account
                 end
             end
         
@@ -119,7 +121,7 @@ class SuperUser < Startup
             else
                 choice = @@prompt.select("Deletion cancelled! {@user.name} dodged a bullet there!".colorize(:red), "Return to main menu")
                 if choice == "Return to main menu"
-                    Superuser.logged_in_menu
+                    SuperUser.logged_in_menu
                 end
             end
             
@@ -132,7 +134,7 @@ class SuperUser < Startup
             puts "The user has been banished. Never to tread on Clambr soil again!"
         
         when "Return to home"
-            Superuser.logged_in_menu
+            SuperUser.logged_in_menu
         end
     end
 
@@ -140,11 +142,14 @@ class SuperUser < Startup
         choice = @@prompt.select("", "User list", "Wall list", "Trainer list")
         case choice
         when "User list"
-            puts Client.all(&:name)
+            puts Client.all.map(&:name)
+            SuperUser.return_to_main
         when "Wall list"
-            Wall.all.each { |wall| puts "#{wall.name}: #{wall.location}, #{wall.area}" }
+            Wall.all.map { |wall| puts "#{wall.name}: #{wall.location}, #{wall.area}" }
+            SuperUser.return_to_main
         when "Trainer list"
-            puts Trainer.all(&:name)
+            puts Trainer.all.map(&:name)
+            SuperUser.return_to_main
         end
     end
 
@@ -165,7 +170,7 @@ class SuperUser < Startup
         when "West London"
             @choice = @@prompt.select("Select a wall".colorize(:cyan), Wall.where(area: "West London").map(&:name))
         when "All walls in all areas"
-            Superuser.global_stats
+            SuperUser.global_stats
         end
     end
 
@@ -180,7 +185,7 @@ class SuperUser < Startup
     def self.return_to_main
         choice = @@prompt.select("", "Return to main menu", "Logout")
         if choice == "Return to main menu"
-            Superuser.logged_in_menu
+            SuperUser.logged_in_menu
         else
             Startup.home_menu
         end
@@ -189,7 +194,7 @@ class SuperUser < Startup
     def self.continue_to_main
         choice = @@prompt.select("", "Continue to main menu", "Logout")
         if choice == "Continue to main menu"
-            Superuser.logged_in_menu
+            SuperUser.logged_in_menu
         else
             Startup.home_menu
         end

@@ -230,19 +230,21 @@ class Startup
 
     def self.user_login
         @@user = Startup.account_finder
-        if @@user
-            Startup.logged_in_menu
+        if @@user.superuser == true
+                SuperUser.logged_in_menu
+        elsif 
+                Startup.logged_in_menu
         else
             puts "Hmm, I can't seem to find the email address".colorize(:red)
             prompt = TTY::Prompt.new
             choice = prompt.select("Try again or create new account?".colorize(:cyan), "Try again", "Create new account")
-        case choice
-            when "Create new account"
-                Startup.create_new_account
-                Startup.logged_in_menu
-            when "Try again"
-                Startup.user_login
-            end
+            case choice
+                when "Create new account"
+                    Startup.create_new_account
+                    Startup.logged_in_menu
+                when "Try again"
+                    Startup.user_login
+                end
         end
     end
     
