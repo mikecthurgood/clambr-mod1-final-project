@@ -60,6 +60,22 @@ class Client < ActiveRecord::Base
         client.destroy
     end
 
+    def self.password_change
+        puts "Please enter existing password"
+        c = gets.chomp
+        if @@user.password == c
+            puts "Please enter new password"
+            d = gets.chomp
+            @@user.update(password: d)
+            puts "Your password has been successfully updated."
+            Startup.update_account
+        else
+            puts "Incorrect password - please try again"
+            sleep 3
+            Client.password_change
+        end
+    end
+
 
 
 end

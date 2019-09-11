@@ -145,18 +145,8 @@ class Startup
             end
         
         when "Change my password"
-            puts "Please enter existing password"
-            c = gets.chomp
-            if @@user.password == c
-                puts "Please enter new password"
-                d = gets.chomp
-                @@user.password = d
-                puts "Your password has been successfully updated."
-                Startup.update_account
-            else
-                puts "Incorrect password - please try again"
-            end
-
+           Startup.password_change
+    
 
         
         when "Delete my account"
@@ -176,6 +166,22 @@ class Startup
         
         when "Return to home"
             Startup.logged_in_menu
+        end
+    end
+
+    def self.password_change
+        puts "Please enter existing password"
+        c = STDIN.noecho(&:gets).chomp
+        if @@user.password == c
+            puts "Please enter new password"
+            d = STDIN.noecho(&:gets).chomp
+            @@user.update(password: d)
+            puts "Your password has been successfully updated."
+            Startup.update_account
+        else
+            puts "Incorrect password - please try again"
+            sleep 1
+            Startup.password_change
         end
     end
 
