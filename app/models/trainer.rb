@@ -20,7 +20,7 @@ class Trainer < ActiveRecord::Base
         self.sessions.all.length
     end
 
-    def ban_client(email)
+    def self.ban_client(email)
         user = Client.find_by(email: email)
         user.destroy
         BannedUser.create(email: email)
