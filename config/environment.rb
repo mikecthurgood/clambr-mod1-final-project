@@ -1,5 +1,7 @@
 require 'bundler/setup'
 require 'colorize'
+require 'io/console'
+require 'highline'
 Bundler.require
 
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_10_120914) do
+ActiveRecord::Schema.define(version: 2019_09_11_123320) do
 
   create_table "banned_users", force: :cascade do |t|
     t.string "email"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 2019_09_10_120914) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "grade"
     t.string "email"
+    t.string "password"
   end
 
   create_table "sessions", force: :cascade do |t|

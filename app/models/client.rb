@@ -37,13 +37,13 @@ class Client < ActiveRecord::Base
         valid_email_regex.match?(email)
     end
 
-    def self.create_user(name, grade, email)
+    def self.create_user(name, grade, email, password)
         if Client.banned_user?(email)
             puts "#{email} is blacklisted, jog on."
         elsif Client.valid_email?(email) == false
             puts "Please input a valid email address."
         else
-        Client.create(name: name, grade: grade, email: email)
+        Client.create(name: name, grade: grade, email: email, password: password)
         end
     end
 

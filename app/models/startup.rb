@@ -224,24 +224,29 @@ class Startup
             end
         end
     end
+    
 
     def self.account_finder
         puts "Please input the email address associated with your account.".colorize(:cyan)
         email = gets.chomp
-        a = Client.find_by(email: email)
+        puts "Please enter the password associated with that email.".colorize(:cyan)
+        password = STDIN.noecho(&:gets).chomp
+        a = Client.find_by(email: email, password: password)
         a
     end
 
     def self.create_new_account
         puts "What's your name?".colorize(:cyan)
             a = gets.chomp
-            puts "What grade do you climb at? (1 - 10)?".colorize(:cyan)
+        puts "What grade do you climb at? (1 - 10)?".colorize(:cyan)
             prompt = TTY::Prompt.new
             b = prompt.slider("Select your grade",{min: 0, max: 10, step: 1})
-            puts "what's your email address?".colorize(:cyan)
+        puts "what's your email address?".colorize(:cyan)
             c = gets.chomp
+        puts "Please choose a secure password. Or insecure, nobody cares enough to hack you <3".colorize(:cyan)
+            d = gets.chomp
             if Client.valid_email?(c)
-                @@user = Client.create_user(a, b, c)
+                @@user = Client.create_user(a, b, c, d)
                 puts "Thanks #{@@user.name}. Just to confirm, you climb at grade V#{@@user.grade} and we'll contact you on #{@@user.email}!"
                 puts " "
                 puts " "
