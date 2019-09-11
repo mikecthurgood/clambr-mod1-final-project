@@ -99,7 +99,7 @@ class Startup
     def self.update_account
         prompt = TTY::Prompt.new
         puts "UPDATE ACCOUNT".colorize(:cyan)
-        choice = prompt.select("What would you like to change?".colorize(:cyan), "Name", "Grade", "Email", "Delete my account".colorize(:red), "Return to home")
+        choice = prompt.select("What would you like to change?".colorize(:cyan), "Name", "Grade", "Email", "Change my password", "Delete my account".colorize(:red), "Return to home")
         case choice
         
         when "Name"
@@ -126,10 +126,10 @@ class Startup
         
         when "Email"
             puts "Hi #{@@user.name}, please enter your new email address".colorize(:cyan)
-            c = gets.chomp
-            valid_email = Client.valid_email?(c)
+            b = gets.chomp
+            valid_email = Client.valid_email?(b)
             if valid_email
-                @@user.update(email: c)
+                @@user.update(email: b)
                 puts " "
                 puts "Great! We'll use #{@@user.email} for your login email!".colorize(:cyan)
                 puts " "
@@ -143,6 +143,21 @@ class Startup
                     Startup.update_account
                 end
             end
+        
+        when "Change my password"
+            puts "Please enter existing password"
+            c = gets.chomp
+            if @@user.password == c
+                puts "Please enter new password"
+                d = gets.chomp
+                @@user.password = d
+                puts "Your password has been successfully updated."
+                Startup.update_account
+            else
+                puts "Incorrect password - please try again"
+            end
+
+
         
         when "Delete my account"
             puts "Are you sure you want to delete your account #{@@user.name}? If so please type DELETE to confirm.".colorize(:red)
