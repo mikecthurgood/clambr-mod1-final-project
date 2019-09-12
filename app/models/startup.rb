@@ -70,12 +70,14 @@ class Startup
         puts " "
         prompt = TTY::Prompt.new
         puts "HOME MENU".colorize(:cyan)
-        choice = prompt.select("What would you like to do?".colorize(:cyan), "Update or delete my account", "Book a session", "See my stats", "Logout")
+        choice = prompt.select("What would you like to do?".colorize(:cyan), "Update or delete my account", "Book a session", "Cancel recently booked session", "See my stats", "Logout")
         case choice
             when "Update or delete my account"
                 Startup.update_account
             when "Book a session"
-                Startup.book_session    
+                Startup.book_session  
+            when "Cancel recently booked session"
+                Startup.cancel_last_booked_session  
             when "See my stats"
                 Startup.stats_menu
             when "Logout"
@@ -266,6 +268,51 @@ class Startup
                         Startup.home_menu
                     end
             end
+    end
+
+    def self.retrieve_trainer_name_from_clients_last_session
+        e = Session.where(client_id: @@user.id)
+        binding.pry
+        a = e.minimum(:created_at)
+        binding.pry
+        b = a.trainer_id
+        c = Trainer.find_by(id: b)
+        d = c.name.colorize(:cyan)
+        # binding.pry
+    end
+
+    def self.retrieve_wall_name_from_clients_last_session
+        a = Session.find_by(client_id: @@user.id)
+        b = a.wall_id
+        c = Wall.find_by(id: b)
+        d = c.name.colorize(:cyan)
+    end
+
+
+    def self.cancel_last_booked_session
+        a = Session.where(client_id: @@user.id).last
+        if a
+            a.delete
+            puts "We've" + " cancelled".colorize(:red) + " your booking with #{Startup.retrieve_trainer_name_from_clients_last_session} at #{Startup.retrieve_wall_name_from_clients_last_session}, #{@@user.name}."
+            Startup.return_to_main
+        else 
+            puts "You've no sessions to cancel!".colorize(:cyan)
+            sleep 2
+            prompt = TTY::Prompt.new
+            choice = prompt.select("Book a session, or return to main menu?".colorize(:cyan), "Book a session", "Return to main menu")
+            case choice 
+
+            when "Book a session"
+                puts "OK!"
+                sleep 1
+                Startup.book_session
+            when "Return to main menu"
+                puts "OK!"
+                sleep 1
+                Startup.logged_in_menu
+            end
+    
+        end
     end
 
     #update menu helper functions
