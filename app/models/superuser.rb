@@ -5,16 +5,6 @@ class SuperUser
 
     @@prompt = TTY::Prompt.new
 
-
-
-    def self.putsyellow(text)
-        puts text.colorize(:yellow)
-    end
-
-    def self.putsgreen(text)
-        puts text.colorize(:green)
-    end
-
     def self.logged_in_menu
         puts "\e[H\e[2J"
         puts "***************************************************************************".colorize(:cyan)
@@ -45,7 +35,6 @@ class SuperUser
         puts '    / ^         \ '
         puts '    ^             ` '
         puts " "
-        # puts "Hi #{@@user.name}!".colorize(:cyan) 
         puts " "
         puts "Welcome to the Clambr admin dashboard".colorize(:cyan)
         puts "Here, you are god!".colorize(:cyan)
@@ -81,78 +70,15 @@ class SuperUser
             case choice
             
             when "Name"
-                    puts "Please enter the new username for #{@user.name}.".colorize(:cyan)
-                    a = gets.chomp
-                    @user.update(name: a)
-                    puts " "
-                    puts "No problem, from now on they shall be known as".colorize(:cyan) + " #{@user.name}!".colorize(:green)
-                    puts " "
-                    SuperUser.return_to_main
-
+                SuperUser.change_name
             when "Grade"
-                puts "Ok SuperUser, time to abuse your power. Select the #{@user}'s new grade (<- ->)".colorize(:cyan)
-                SuperUser.grade_slider
-                    puts "User grade now set to V#{@user.grade}.".colorize(:green)
-                    sleep 1
-                SuperUser.return_to_main
-            
+                SuperUser.change_grade
             when "Email"
-                puts "Please enter the new email address for #{@user.name}".colorize(:cyan)
-                c = gets.chomp
-                valid_email = Client.valid_email?(c)
-                if valid_email
-                    @user.update(email: c)
-                    puts " "
-                    puts "Email address changed to #{@user.email} for #{@user.name}.".colorize(:cyan)
-                    puts " "
-                    sleep 1
-                    SuperUser.return_to_main
-                else
-                    puts " "
-                    choice = @@prompt.select("That's not a valid email address, please try again", "Start again")
-                    if choice == "Start again"
-                        SuperUser.update_account
-                    end
-                end
-            
+                SuperUser.change_email        
             when "Delete account"
-                puts "Are you sure you want to delete #{@user.name}'s account? Type DELETE to confirm.".colorize(:red)
-                d = gets.chomp
-                if d == "DELETE"
-                    Client.delete_account(@user.email)
-                    puts "Account Deleted!!"
-                    sleep 1
-                    Startup.home_menu
-                else
-                    choice = @@prompt.select("Deletion cancelled! {@user.name} dodged a bullet there!".colorize(:red), "Return to main menu")
-                    if choice == "Return to main menu"
-                        SuperUser.logged_in_menu
-                    end
-                end
-                
+                SuperUser.delete_account 
             when "Ban user".colorize(:red)
-                puts "Please confirm the email of the user you want to ban."
-                email = gets.chomp
-                if email != @user.email
-                    puts "That email didn't match, please restart the process"
-                    SuperUser.return_to_main
-                else
-                    puts "Banning a user will blacklist their email address."
-                    puts "This CANNOT be undone!".colorize(:red)
-                    puts "please type CONFIRM to confirm banishment"
-                    input = gets.chomp
-                    if input == "CONFIRM"
-                        Trainer.ban_client(@user.email)
-                        puts "The user has been banished. Never to tread on Clambr soil again!"
-                        sleep 1
-                        SuperUser.return_to_main
-                    else
-                        puts "Banishment cancelled - you are a mercifuil overlord"
-                        sleep 1
-                        SuperUser.return_to_main
-                    end
-                end
-            
+                SuperUser.ban_user
             when "Return to home"
                 SuperUser.logged_in_menu
             end
@@ -174,27 +100,6 @@ class SuperUser
         end
     end
 
-    def self.area_selector
-        puts " "
-        choice = @@prompt.select("Which area of London looking for stats in?".colorize(:cyan), "North London", "East London", "South London", "West London", "All walls in all areas")
-        self.wall_selector(choice)
-    end
-
-    def self.wall_selector(location)
-        case location
-        when "North London"
-            @choice = @@prompt.select("Select a wall".colorize(:cyan), Wall.where(area: "North London").map(&:name))
-        when "East London"
-            @choice = @@prompt.select("Select a wall".colorize(:cyan), Wall.where(area: "East London").map(&:name))
-        when "South London"
-            @choice = @@prompt.select("Select a wall".colorize(:cyan), Wall.where(area: "South London").map(&:name))
-        when "West London"
-            @choice = @@prompt.select("Select a wall".colorize(:cyan), Wall.where(area: "West London").map(&:name))
-        when "All walls in all areas"
-            SuperUser.global_stats
-        end
-    end
-
     def self.global_stats
         puts "Total Sessions: #{Session.all.length}"
         puts "Total users: #{Client.all.length}"
@@ -204,6 +109,92 @@ class SuperUser
         sleep 2
         SuperUser.return_to_main
     end
+    
+    def self.grade_slider
+        choice = @@prompt.slider("",{min: 0, max: 10, step: 1})
+        @user.update(grade: choice)
+    end
+
+    #update menu helper functions
+    def self.change_name
+        puts "Please enter the new username for #{@user.name}.".colorize(:cyan)
+        a = gets.chomp
+        @user.update(name: a)
+        puts " "
+        puts "No problem, from now on they shall be known as".colorize(:cyan) + " #{@user.name}!".colorize(:green)
+        puts " "
+        SuperUser.return_to_main
+    end
+
+    def self.change_grade
+        puts "Ok SuperUser, time to abuse your power. Select the #{@user}'s new grade (<- ->)".colorize(:cyan)
+        SuperUser.grade_slider
+        puts "User grade now set to V#{@user.grade}.".colorize(:green)
+        sleep 1
+        SuperUser.return_to_main
+    end
+
+    def self.change_email
+        puts "Please enter the new email address for #{@user.name}".colorize(:cyan)
+        c = gets.chomp
+        valid_email = Client.valid_email?(c)
+        if valid_email
+            @user.update(email: c)
+            puts " "
+            puts "Email address changed to #{@user.email} for #{@user.name}.".colorize(:cyan)
+            puts " "
+            sleep 1
+            SuperUser.return_to_main
+        else
+            puts " "
+            choice = @@prompt.select("That's not a valid email address, please try again", "Start again")
+            if choice == "Start again"
+                SuperUser.update_account
+            end
+        end
+    end
+
+    def self.delete_account
+        puts "Are you sure you want to delete #{@user.name}'s account? Type DELETE to confirm.".colorize(:red)
+        d = gets.chomp
+        if d == "DELETE"
+            Client.delete_account(@user.email)
+            puts "Account Deleted!!"
+            sleep 1
+            Startup.home_menu
+        else
+            choice = @@prompt.select("Deletion cancelled! {@user.name} dodged a bullet there!".colorize(:red), "Return to main menu")
+            if choice == "Return to main menu"
+                SuperUser.logged_in_menu
+            end
+        end
+    end
+
+    def self.ban_user
+        puts "Please confirm the email of the user you want to ban."
+        email = gets.chomp
+        if email != @user.email
+            puts "That email didn't match, please restart the process"
+            SuperUser.return_to_main
+        else
+            puts "Banning a user will blacklist their email address."
+            puts "This CANNOT be undone!".colorize(:red)
+            puts "please type CONFIRM to confirm banishment"
+            input = gets.chomp
+            if input == "CONFIRM"
+                Trainer.ban_client(@user.email)
+                puts "The user has been banished. Never to tread on Clambr soil again!"
+                sleep 1
+                SuperUser.return_to_main
+            else
+                puts "Banishment cancelled - you are a mercifuil overlord"
+                sleep 1
+                SuperUser.return_to_main
+            end
+        end
+    end
+
+    #global helper functions
 
     def self.return_to_main
         choice = @@prompt.select("", "Return to main menu", "Logout")
@@ -223,9 +214,33 @@ class SuperUser
         end
     end
 
-    def self.grade_slider
-        choice = @@prompt.slider("",{min: 0, max: 10, step: 1})
-        @user.update(grade: choice)
+    def self.putsyellow(text)
+        puts text.colorize(:yellow)
     end
+
+    def self.putsgreen(text)
+        puts text.colorize(:green)
+    end
+
+    # def self.area_selector
+    #     puts " "
+    #     choice = @@prompt.select("Which area of London looking for stats in?".colorize(:cyan), "North London", "East London", "South London", "West London", "All walls in all areas")
+    #     self.wall_selector(choice)
+    # end
+
+    # def self.wall_selector(location)
+    #     case location
+    #     when "North London"
+    #         @choice = @@prompt.select("Select a wall".colorize(:cyan), Wall.where(area: "North London").map(&:name))
+    #     when "East London"
+    #         @choice = @@prompt.select("Select a wall".colorize(:cyan), Wall.where(area: "East London").map(&:name))
+    #     when "South London"
+    #         @choice = @@prompt.select("Select a wall".colorize(:cyan), Wall.where(area: "South London").map(&:name))
+    #     when "West London"
+    #         @choice = @@prompt.select("Select a wall".colorize(:cyan), Wall.where(area: "West London").map(&:name))
+    #     when "All walls in all areas"
+    #         SuperUser.global_stats
+    #     end
+    # end
 
 end

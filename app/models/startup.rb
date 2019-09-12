@@ -5,32 +5,20 @@ class Startup
 
     @@user = nil
 
-    def self.putsyellow(text)
-        puts text.colorize(:yellow)
-    end
-
-    def self.putsgreen(text)
-        puts text.colorize(:green)
-    end
-    
-
     def self.home_menu
         @@user = nil
-    prompt = TTY::Prompt.new
-    puts "\e[H\e[2J"
-    puts "*************************************************".colorize(:cyan)
-    putsyellow( "▄█        ▄██████▄     ▄██████▄   ▄█   ███▄▄▄▄    ")
-    putsyellow( "███       ███    ███   ███    ███ ███  ███▀▀▀██▄ ")
-    putsyellow( "███       ███    ███   ███    █▀  ███▌ ███   ███ ")
-    putsyellow( "███       ███    ███  ▄███        ███▌ ███   ███ ")
-    putsyellow( "███       ███    ███ ▀▀███ ████▄  ███▌ ███   ███ ")
-    putsyellow( "███       ███    ███   ███    ███ ███  ███   ███ ")
-    putsyellow( "███▌    ▄ ███    ███   ███    ███ ███  ███   ███ ")
-    putsyellow( "█████▄▄██  ▀██████▀    ████████▀  █▀    ▀█   █▀  ")
-    puts "*************************************************".colorize(:cyan)
-
-
-
+        prompt = TTY::Prompt.new
+        puts "\e[H\e[2J"
+        puts "*************************************************".colorize(:cyan)
+        putsyellow( "▄█        ▄██████▄     ▄██████▄   ▄█   ███▄▄▄▄    ")
+        putsyellow( "███       ███    ███   ███    ███ ███  ███▀▀▀██▄ ")
+        putsyellow( "███       ███    ███   ███    █▀  ███▌ ███   ███ ")
+        putsyellow( "███       ███    ███  ▄███        ███▌ ███   ███ ")
+        putsyellow( "███       ███    ███ ▀▀███ ████▄  ███▌ ███   ███ ")
+        putsyellow( "███       ███    ███   ███    ███ ███  ███   ███ ")
+        putsyellow( "███▌    ▄ ███    ███   ███    ███ ███  ███   ███ ")
+        putsyellow( "█████▄▄██  ▀██████▀    ████████▀  █▀    ▀█   █▀  ")
+        puts "*************************************************".colorize(:cyan)
         puts " "
         choice = prompt.select("What would you like to do?".colorize(:cyan), "Create new account", "Login")
         case choice
@@ -41,7 +29,6 @@ class Startup
                 Startup.user_login
         end
     end
-
 
     def self.logged_in_menu
         puts "\e[H\e[2J"
@@ -103,87 +90,53 @@ class Startup
         case choice
         
         when "Name"
-                puts "Hi".colorize(:cyan) + " #{@@user.name},".colorize(:green) + " please enter your new username.".colorize(:cyan)
-                a = gets.chomp
-                @@user.update(name: a)
-                puts " "
-                puts "No problem, from now on you shall be known as".colorize(:cyan) + " #{@@user.name}!".colorize(:green)
-                puts " "
-                Startup.return_to_main
-
+            Startup.change_name
         when "Grade"
-            puts "Hi #{@@user.name}, please select your new grade (<- ->)".colorize(:cyan)
-            Startup.grade_slider
-            if @@user.grade > 5    
-                puts " "
-                puts "Climbing at V#{@@user.grade}! You're" + " crushing it!".colorize(:green)
-            else
-                puts " "
-                puts "Climbing at V#{@@user.grade}!" + " Keep pushing!".colorize(:red)
-                sleep 2
-            end
-            Startup.return_to_main
-        
+            Startup.change_grade
         when "Email"
-            puts "Hi #{@@user.name}, please enter your new email address".colorize(:cyan)
-            b = gets.chomp
-            valid_email = Client.valid_email?(b)
-            if valid_email
-                @@user.update(email: b)
-                puts " "
-                puts "Great! We'll use #{@@user.email} for your login email!".colorize(:cyan)
-                puts " "
-                sleep 5
-                Startup.return_to_main
-            else
-                puts " "
-                prompt = TTY::Prompt.new
-                choice = prompt.select("That's not a valid email address", "Return to update my account menu")
-                if choice == "Return to main menu"
-                    Startup.update_account
-                end
-            end
-        
+            Startup.change_email
         when "Change my password"
-           Startup.password_change
-    
-
-        
+            Startup.password_change
         when "Delete my account".colorize(:red)
-            puts "Are you sure you want to delete your account #{@@user.name}? If so please type DELETE to confirm.".colorize(:red)
-            d = gets.chomp
-            if d == "DELETE"
-                Client.delete_account(@@user.email)
-                puts "Account Deleted!!"
-                sleep 3
-                Startup.home_menu
-            else
-                choice = prompt.select("Deletion cancelled! Can we still be friends??".colorize(:red), "Return to main menu")
-                if choice == "Return to main menu"
-                    Startup.logged_in_menu
-                end
-            end
-        
+            Startup.delete_account
         when "Return to home"
             Startup.logged_in_menu
         end
     end
 
-    def self.password_change
-        puts "Please enter existing password"
-        c = STDIN.noecho(&:gets).chomp
-        if @@user.password == c
-            puts "Please enter new password"
-            d = STDIN.noecho(&:gets).chomp
-            @@user.update(password: d)
-            puts "Your password has been successfully updated."
-            Startup.update_account
+    def self.stats_menu
+        num_sesh = @@user.number_of_sessions?
+        w = @@user.which_walls?
+        t = @@user.which_trainers?
+        gra = @@user.grade
+        puts "Hi #{@@user.name}. Here's your current Clambr stats:".colorize(:cyan)
+        if num_sesh == 1
+            puts "- You have had #{num_sesh} session!"
         else
-            puts "Incorrect password - please try again"
+            puts "- You have had #{num_sesh} sessions!"
+        end
+        puts "- You have climbed at #{w.join(", ")}."
+        puts "- You have trained with #{t.join(", ")}"
+        puts "- Your current grade is V#{gra}"
+        sleep 2
+        prompt = TTY::Prompt.new
+        Startup.return_to_main
+    end
+
+    def self.book_session
+        a = Startup.area_selector
+        b = Startup.date_selector
+        j = Wall.find_by(name: a)
+        c = Client.find_by(email: @@user.email)
+        if c
+            d = Session.create(client_id: c.id, trainer_id: rand(1..20), wall_id: j.id, slot: b)
+            puts "That session's all booked for you #{c.name}. You'll be climbing on" + " #{b[:day]} #{b[:time]}".colorize(:cyan) + " with" + " #{d.trainer.name}".colorize(:yellow) +  " at" + " #{d.wall.name}.".colorize(:green) + " See you there! 🧗‍♀️ 🧗‍♂️ 💪"
             sleep 1
-            Startup.password_change
+            Startup.return_to_main
         end
     end
+
+    #book session helper functions
 
     def self.area_selector
         puts"Ok!".colorize(:cyan)
@@ -207,127 +160,6 @@ class Startup
             prompt = TTY::Prompt.new
             @choice = prompt.select("Which wall would you like to book a session at?".colorize(:cyan), Wall.where(area: "West London").map(&:name))
         end
-    end
-
-    def self.stats_menu
-        num_sesh = @@user.number_of_sessions?
-        w = @@user.which_walls?
-        t = @@user.which_trainers?
-        gra = @@user.grade
-        puts "Hi #{@@user.name}. Here's your current Clambr stats:".colorize(:cyan)
-        if num_sesh == 1
-            puts "- You have had #{num_sesh} session!"
-        else
-            puts "- You have had #{num_sesh} sessions!"
-        end
-        puts "- You have climbed at #{w.join(", ")}."
-        puts "- You have trained with #{t.join(", ")}"
-        puts "- Your current grade is V#{gra}"
-        sleep 2
-        prompt = TTY::Prompt.new
-        Startup.return_to_main
-    end   
-
-    def self.user_login
-        @@user = Startup.account_finder
-        if @@user.superuser == true
-                SuperUser.logged_in_menu
-        elsif 
-                Startup.logged_in_menu
-        else
-            puts "Hmm, I can't seem to find the email address".colorize(:red)
-            prompt = TTY::Prompt.new
-            choice = prompt.select("Try again or create new account?".colorize(:cyan), "Try again", "Create new account")
-            case choice
-                when "Create new account"
-                    Startup.create_new_account
-                    Startup.logged_in_menu
-                when "Try again"
-                    Startup.user_login
-                end
-        end
-    end
-    
-
-    def self.account_finder
-        puts "Please input the email address associated with your account.".colorize(:cyan)
-        email = gets.chomp
-        puts "Please enter the password associated with that email.".colorize(:cyan)
-        password = STDIN.noecho(&:gets).chomp
-        a = Client.find_by(email: email, password: password)
-        if !a 
-            puts "Login failed - please try again."
-            sleep 1
-            Startup.user_login
-        end
-    end
-
-    def self.create_new_account
-        puts "What's your name?".colorize(:cyan)
-            a = gets.chomp
-        puts "What grade do you climb at? (1 - 10)?".colorize(:cyan)
-            prompt = TTY::Prompt.new
-            b = prompt.slider("Select your grade",{min: 0, max: 10, step: 1})
-        puts "what's your email address?".colorize(:cyan)
-            c = gets.chomp
-        puts "Please choose a secure password. Or insecure, nobody cares enough to hack you <3".colorize(:cyan)
-            d = gets.chomp
-            if Client.valid_email?(c)
-                @@user = Client.create_user(a, b, c, d)
-                puts "Thanks #{@@user.name}. Just to confirm, you climb at grade V#{@@user.grade} and we'll contact you on #{@@user.email}!"
-                puts " "
-                puts " "
-                sleep 1
-            else
-                puts "Email invalid, please try again".colorize(:red)
-                sleep 1
-                prompt = TTY::Prompt.new
-                choice = prompt.select("", "Try again", "Logout")
-                    if choice == "Try again"
-                        Startup.create_new_account
-                    else
-                        Startup.home_menu
-                    end
-            end
-    end
-
-    def self.return_to_main
-        prompt = TTY::Prompt.new
-        choice = prompt.select("", "Return to main menu", "Logout")
-        if choice == "Return to main menu"
-            Startup.logged_in_menu
-        else
-            Startup.home_menu
-        end
-    end
-
-    def self.continue_to_main
-        prompt = TTY::Prompt.new
-        choice = prompt.select("", "Continue to main menu", "Exit")
-        if choice == "Continue to main menu"
-            Startup.logged_in_menu
-        else
-            Startup.home_menu
-        end
-    end
-
-    def self.book_session
-        a = Startup.area_selector
-        b = Startup.date_selector
-        j = Wall.find_by(name: a)
-        c = Client.find_by(email: @@user.email)
-        if c
-            d = Session.create(client_id: c.id, trainer_id: rand(1..20), wall_id: j.id, slot: b)
-            puts "That session's all booked for you #{c.name}. You'll be climbing on" + " #{b[:day]} #{b[:time]}".colorize(:cyan) + " with" + " #{d.trainer.name}".colorize(:yellow) +  " at" + " #{d.wall.name}.".colorize(:green) + " See you there! 🧗‍♀️ 🧗‍♂️ 💪"
-            sleep 1
-            Startup.return_to_main
-        end
-    end
-
-    def self.grade_slider
-        prompt = TTY::Prompt.new
-        choice = prompt.slider("".colorize(:cyan),{min: 0, max: 10, step: 1})
-        @@user.update(grade: choice)
     end
 
     def self.date_selector
@@ -380,5 +212,175 @@ class Startup
             end
         end
         slot
+    end
+
+    #home menu helper functions
+    def self.user_login
+        @@user = Startup.account_finder
+        if @@user.superuser == true
+                SuperUser.logged_in_menu
+        else 
+                Startup.logged_in_menu
+        end
+    end
+    
+    def self.account_finder
+        puts "Please input the email address associated with your account.".colorize(:cyan)
+        email = gets.chomp
+        puts "Please enter the password associated with that email.".colorize(:cyan)
+        password = STDIN.noecho(&:gets).chomp
+        a = Client.find_by(email: email, password: password)
+        if !a 
+            puts "Login failed - please try again."
+            sleep 1
+            Startup.user_login
+        else
+            a
+        end
+    end
+
+    def self.create_new_account
+        puts "What's your name?".colorize(:cyan)
+            a = gets.chomp
+        puts "What grade do you climb at? (1 - 10)?".colorize(:cyan)
+            prompt = TTY::Prompt.new
+            b = prompt.slider("Select your grade",{min: 0, max: 10, step: 1})
+        puts "what's your email address?".colorize(:cyan)
+            c = gets.chomp
+        puts "Please choose a secure password. Or insecure, nobody cares enough to hack you <3".colorize(:cyan)
+            d = gets.chomp
+            if Client.valid_email?(c)
+                @@user = Client.create_user(a, b, c, d)
+                puts "Thanks #{@@user.name}. Just to confirm, you climb at grade V#{@@user.grade} and we'll contact you on #{@@user.email}!"
+                puts " "
+                puts " "
+                sleep 1
+            else
+                puts "Email invalid, please try again".colorize(:red)
+                sleep 1
+                prompt = TTY::Prompt.new
+                choice = prompt.select("", "Try again", "Logout")
+                    if choice == "Try again"
+                        Startup.create_new_account
+                    else
+                        Startup.home_menu
+                    end
+            end
+    end
+
+    #update menu helper functions
+    def self.change_name
+        puts "Hi".colorize(:cyan) + " #{@@user.name},".colorize(:green) + " please enter your new username.".colorize(:cyan)
+            a = gets.chomp
+            @@user.update(name: a)
+            puts " "
+            puts "No problem, from now on you shall be known as".colorize(:cyan) + " #{@@user.name}!".colorize(:green)
+            puts " "
+            Startup.return_to_main
+    end
+
+    def self.change_grade
+        puts "Hi #{@@user.name}, please select your new grade (<- ->)".colorize(:cyan)
+        Startup.grade_slider
+        if @@user.grade > 5    
+            puts " "
+            puts "Climbing at V#{@@user.grade}! You're" + " crushing it!".colorize(:green)
+        else
+            puts " "
+            puts "Climbing at V#{@@user.grade}!" + " Keep pushing!".colorize(:red)
+            sleep 2
+        end
+        Startup.return_to_main
+    end
+
+    def self.grade_slider
+        prompt = TTY::Prompt.new
+        choice = prompt.slider("".colorize(:cyan),{min: 0, max: 10, step: 1})
+        @@user.update(grade: choice)
+    end
+
+    def self.change_email
+        puts "Hi #{@@user.name}, please enter your new email address".colorize(:cyan)
+        b = gets.chomp
+        valid_email = Client.valid_email?(b)
+        if valid_email
+            @@user.update(email: b)
+            puts " "
+            puts "Great! We'll use #{@@user.email} for your login email!".colorize(:cyan)
+            puts " "
+            sleep 2
+            Startup.return_to_main
+        else
+            puts " "
+            prompt = TTY::Prompt.new
+            choice = prompt.select("That's not a valid email address", "Try again", "Return to update my account menu")
+            if choice == "Return to main menu"
+                Startup.update_account
+            else
+                Startup.change_email
+            end
+        end        
+    end
+    
+    def self.password_change
+        puts "Please enter existing password"
+        c = STDIN.noecho(&:gets).chomp
+        if @@user.password == c
+            puts "Please enter new password"
+            d = STDIN.noecho(&:gets).chomp
+            @@user.update(password: d)
+            puts "Your password has been successfully updated."
+            sleep 1
+            Startup.return_to_main
+        else
+            puts "Incorrect password - please try again"
+            sleep 1
+            Startup.password_change
+        end
+    end
+
+    def self.delete_account
+        puts "Are you sure you want to delete your account #{@@user.name}? If so please type DELETE to confirm.".colorize(:red)
+        d = gets.chomp
+        if d == "DELETE"
+            Client.delete_account(@@user.email)
+            puts "Account Deleted!!"
+            sleep 3
+            Startup.home_menu
+        else
+            choice = prompt.select("Deletion cancelled! Can we still be friends??".colorize(:red), "Return to main menu")
+            if choice == "Return to main menu"
+                Startup.logged_in_menu
+            end
+        end
+    end
+
+    #global helper functions
+    def self.putsyellow(text)
+        puts text.colorize(:yellow)
+    end
+
+    def self.putsgreen(text)
+        puts text.colorize(:green)
+    end
+
+    def self.return_to_main
+        prompt = TTY::Prompt.new
+        choice = prompt.select("", "Return to main menu", "Logout")
+        if choice == "Return to main menu"
+            Startup.logged_in_menu
+        else
+            Startup.home_menu
+        end
+    end
+
+    def self.continue_to_main
+        prompt = TTY::Prompt.new
+        choice = prompt.select("", "Continue to main menu", "Exit")
+        if choice == "Continue to main menu"
+            Startup.logged_in_menu
+        else
+            Startup.home_menu
+        end
     end
 end
