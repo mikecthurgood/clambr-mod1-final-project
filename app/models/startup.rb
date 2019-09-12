@@ -270,30 +270,22 @@ class Startup
             end
     end
 
-    def self.retrieve_trainer_name_from_clients_last_session
-        e = Session.where(client_id: @@user.id)
-        binding.pry
-        a = e.minimum(:created_at)
-        binding.pry
-        b = a.trainer_id
-        c = Trainer.find_by(id: b)
-        d = c.name.colorize(:cyan)
+    def self.retrieve_trainer_name_from_session(session)
+        a = Trainer.find_by(id: session.trainer_id)
+        b = a.name.colorize(:cyan)
         # binding.pry
     end
 
-    def self.retrieve_wall_name_from_clients_last_session
-        a = Session.find_by(client_id: @@user.id)
-        b = a.wall_id
-        c = Wall.find_by(id: b)
-        d = c.name.colorize(:cyan)
+    def self.retrieve_wall_name_from_session(session)
+        a = Wall.find_by(id: session.wall_id)
+        b = a.name.colorize(:cyan)
     end
-
 
     def self.cancel_last_booked_session
         a = Session.where(client_id: @@user.id).last
         if a
             a.delete
-            puts "We've" + " cancelled".colorize(:red) + " your booking with #{Startup.retrieve_trainer_name_from_clients_last_session} at #{Startup.retrieve_wall_name_from_clients_last_session}, #{@@user.name}."
+            puts "We've" + " cancelled".colorize(:red) + " your booking with #{Startup.retrieve_trainer_name_from_session(a)} at #{Startup.retrieve_wall_name_from_session(a)}, #{@@user.name}."
             Startup.return_to_main
         else 
             puts "You've no sessions to cancel!".colorize(:cyan)
