@@ -255,7 +255,11 @@ class Startup
         puts "Please enter the password associated with that email.".colorize(:cyan)
         password = STDIN.noecho(&:gets).chomp
         a = Client.find_by(email: email, password: password)
-        a
+        if !a 
+            puts "Login failed - please try again."
+            sleep 1
+            Startup.user_login
+        end
     end
 
     def self.create_new_account
