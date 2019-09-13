@@ -261,9 +261,9 @@ class Startup
             prompt = TTY::Prompt.new
             b = prompt.slider("Select your grade",{min: 0, max: 10, step: 1})
         puts "what's your email address?".colorize(:cyan)
-            c = STDIN.noecho(&:gets).chomp
+            c = gets.chomp
         puts "Please choose a secure password. Or insecure, nobody cares enough to hack you <3".colorize(:cyan)
-            d = gets.chomp
+            d = STDIN.noecho(&:gets).chomp
             if Client.valid_email?(c)
                 @@user = Client.create_user(a, b, c, d)
                 puts "Thanks #{@@user.name}. Just to confirm, you climb at grade V#{@@user.grade} and we'll contact you on #{@@user.email}!"
