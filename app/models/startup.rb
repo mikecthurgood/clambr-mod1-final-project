@@ -238,9 +238,17 @@ class Startup
         password = STDIN.noecho(&:gets).chomp
         a = Client.find_by(email: email, password: password)
         if !a 
-            puts "Login failed - please try again."
+            puts "Login failed - please try again or return to main menu"
             sleep 1
-            Startup.user_login
+            prompt = TTY::Prompt.new
+            choice = prompt.select("", "Try again", "Return to main menu")
+            case
+            when "Try again"
+                Startup.account_finder
+            when "Return to main menu"
+                Startup.logged_in_menu
+            end
+
         else
             a
         end
@@ -402,6 +410,7 @@ class Startup
             sleep 3
             Startup.home_menu
         else
+            prompt = TTY::Prompt.new
             choice = prompt.select("Deletion cancelled! Can we still be friends??".colorize(:red), "Return to main menu")
             if choice == "Return to main menu"
                 Startup.logged_in_menu
