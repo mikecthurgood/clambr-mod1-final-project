@@ -261,7 +261,7 @@ class Startup
             prompt = TTY::Prompt.new
             b = prompt.slider("Select your grade",{min: 0, max: 10, step: 1})
         puts "what's your email address?".colorize(:cyan)
-            c = gets.chomp
+            c = STDIN.noecho(&:gets).chomp
         puts "Please choose a secure password. Or insecure, nobody cares enough to hack you <3".colorize(:cyan)
             d = gets.chomp
             if Client.valid_email?(c)
