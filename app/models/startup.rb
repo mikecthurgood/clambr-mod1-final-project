@@ -383,12 +383,22 @@ class Startup
         end
     end
 
+    def self.text_flasher(text)
+        puts "\e[5m#{text}\e[0m"
+    end
+
     def self.delete_account
         puts "Are you sure you want to delete your account #{@@user.name}? If so please type DELETE to confirm.".colorize(:red)
         d = gets.chomp
         if d == "DELETE"
             Client.delete_account(@@user.email)
-            puts "Account Deleted!!"
+            deletion_msg = "Account Deleted!!".colorize(:red)
+            6.times do
+                print "\r#{ deletion_msg }"
+                sleep 0.5
+                print "\r#{ ' ' * deletion_msg.size }" # Send return and however many spaces are needed.
+                sleep 0.5
+              end
             sleep 3
             Startup.home_menu
         else
