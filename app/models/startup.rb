@@ -132,7 +132,12 @@ class Startup
         c = Client.find_by(email: @@user.email)
         if c
             d = Session.create(client_id: c.id, trainer_id: rand(1..20), wall_id: j.id, slot: b)
-            puts "That session's all booked for you #{c.name}. You'll be climbing on" + " #{b[:day]} #{b[:time]}".colorize(:cyan) + " with" + " #{d.trainer.name}".colorize(:yellow) +  " at" + " #{d.wall.name}.".colorize(:green) + " See you there! 🧗‍♀️ 🧗‍♂️ 💪"
+            spinner = TTY::Spinner.new("[:spinner] Please wait - booking your session.".colorize(:yellow), format: :bouncing_ball)
+                20.times do
+                spinner.spin
+                sleep(0.1)
+                end
+            puts "\nThat session's all booked for you #{c.name}. \nYou'll be climbing on" + " #{b[:day]} #{b[:time]}".colorize(:cyan) + " with" + " #{d.trainer.name}".colorize(:yellow) +  " at" + " #{d.wall.name}.".colorize(:green) + " See you there! 🧗‍♀️ 🧗‍♂️ 💪"
             sleep 1
             Startup.return_to_main
         end

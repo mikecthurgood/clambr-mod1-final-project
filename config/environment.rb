@@ -2,6 +2,7 @@ require 'bundler/setup'
 require 'colorize'
 require 'io/console'
 require 'highline'
+require 'tty-spinner'
 Bundler.require
 
 
